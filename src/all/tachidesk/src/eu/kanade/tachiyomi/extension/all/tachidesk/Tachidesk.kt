@@ -111,6 +111,8 @@ class Tachidesk : ConfigurableSource, UnmeteredSource, HttpSource() {
 
     private inner class CustomHeadersInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
+            if (customHttpHeaders.isEmpty()) return chain.proceed(chain.request())
+
             val builder = chain.request().newBuilder()
             customHttpHeaders.forEach { builder.header(it.key, it.value) }
             return chain.proceed(builder.build())
